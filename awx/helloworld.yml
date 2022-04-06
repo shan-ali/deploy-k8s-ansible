@@ -8,4 +8,4 @@
     shell: echo "Hi! Tower is working."
 
   - name: Hostname
-    shell: hostname
+    shell: echo $(hostname)
