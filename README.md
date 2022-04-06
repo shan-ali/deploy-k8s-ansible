@@ -18,7 +18,7 @@ This is all done on a Windows 10 machine
 
 ## Install Python
 
-Open an cmd terminal as Administrator
+>Note: Open an cmd terminal as Administrator
 
 ```
 choco install python -y
@@ -28,7 +28,7 @@ Reference: https://community.chocolatey.org/packages/python/3.10.4
 
 ## Install Kustomize
 
-Open an cmd terminal as Administrator
+>Note: Open an cmd terminal as Administrator
 
 ```
 choco install kustomize -y 
@@ -106,3 +106,37 @@ $awxAdminPassword=$(kubectl get secret awx-admin-password -o jsonpath="{.data.pa
 Reference:
 - https://github.com/ansible/awx/blob/devel/INSTALL.md
 - https://github.com/ansible/awx-operator 
+
+## Configure Your Local Windows Host as a Node
+
+Normally ansible uses SSH to communicate with hosts, however, for windows we need to use WinRM. We will be follwing the steps outlined in [Official Windows Setup](https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html)
+
+Since we are on Windows 10, we can skip the initial steps of upgrading the powershell and .NET Framework versions. If you are on an older version of windows please follow the steps in [upgrading-powershell-and-net-framework](https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html#upgrading-powershell-and-net-framework).
+
+### Create Ansible User
+
+You will need to manually create an `ansible` windows user on your system that is part of the `Administrators` group. 
+
+You can follow the step in this video: [Configure a Windows Host for Ansible - ansible winrm](https://www.youtube.com/watch?v=-vPXS8UuJoI&ab_channel=AnsiblePilot)
+
+### WinRM Setup
+
+"There are two main components of the WinRM service that governs how Ansible can interface with the Windows host: the listener and the service configuration settings" 
+
+The "script ConfigureRemotingForAnsible.ps1 can be used to set up the basics. This script sets up both HTTP and HTTPS listeners with a self-signed certificate and enables the Basic authentication option on the service."
+
+>Note: Open a powershell terminal as Administrator
+
+```
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
+$file = "$env:temp\ConfigureRemotingForAnsible.ps1"
+
+(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
+
+powershell.exe -ExecutionPolicy ByPass -File $file
+```
+
+References:
+- https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html 
+- https://www.youtube.com/watch?v=-vPXS8UuJoI&ab_channel=AnsiblePilot
