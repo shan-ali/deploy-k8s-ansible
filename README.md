@@ -123,7 +123,7 @@ You can follow the step in this video: [Configure a Windows Host for Ansible - a
 
 "There are two main components of the WinRM service that governs how Ansible can interface with the Windows host: the listener and the service configuration settings" 
 
-The "script ConfigureRemotingForAnsible.ps1 can be used to set up the basics. This script sets up both HTTP and HTTPS listeners with a self-signed certificate and enables the Basic authentication option on the service."
+The "script `ConfigureRemotingForAnsible.ps1` can be used to set up the basics. This script sets up both HTTP and HTTPS listeners with a self-signed certificate and enables the Basic authentication option on the service."
 
 >Note: Open a powershell terminal as Administrator
 
@@ -136,6 +136,22 @@ $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
 
 powershell.exe -ExecutionPolicy ByPass -File $file
 ```
+
+### Add Windows Host to AWX
+
+Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `Windows Local`
+
+
+
+Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user.
+
+```
+ansible_user: ansible
+ansible_password: <password>
+ansible_connection: winrm
+ansible_winrm_transport: basic
+```
+
 
 References:
 - https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html 
