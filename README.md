@@ -141,9 +141,11 @@ powershell.exe -ExecutionPolicy ByPass -File $file
 
 Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `Windows Local`
 
-
+![image](https://user-images.githubusercontent.com/16169323/162064083-0a524e50-1699-4584-97b0-2bdea94c7cac.png)
 
 Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user.
+
+![image](https://user-images.githubusercontent.com/16169323/162064384-1a30c2cc-d07f-48a3-bfb9-0a5259fddf82.png)
 
 ```
 ansible_user: ansible
