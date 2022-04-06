@@ -3,4 +3,5 @@
   hosts: all 
   tasks: 
   - name: print from local windows host
-    win_shell: Write-Host Hello World!
+    win_shell: |
+      Write-Host Hello World!
