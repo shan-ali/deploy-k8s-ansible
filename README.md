@@ -163,9 +163,15 @@ References:
 
 Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `Windows Test`. This project will use this git repository as its source
 
+![image](https://user-images.githubusercontent.com/16169323/162069179-a40eb978-8e68-4bc1-b610-675a7868cdcb.png)
+
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) named `Hello World` that is in the project `Windows Test`. You will use the Playbook `helloworld.yml` that is in the root of this repository. 
 
+![image](https://user-images.githubusercontent.com/16169323/162069250-243d323b-0141-4186-a14f-cd21cf3d415b.png)
+
 Launch the job
+
+![image](https://user-images.githubusercontent.com/16169323/162069552-a6d32138-9d14-476c-a627-05633bf6ddd9.png)
 
 
 
