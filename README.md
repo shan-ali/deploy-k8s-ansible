@@ -137,7 +137,7 @@ $file = "$env:temp\ConfigureRemotingForAnsible.ps1"
 powershell.exe -ExecutionPolicy ByPass -File $file
 ```
 
-### Add Windows Host to AWX
+## Add Windows Host to AWX
 
 Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `Windows Local`
 
@@ -154,7 +154,16 @@ ansible_connection: winrm
 ansible_winrm_transport: basic
 ```
 
-
 References:
 - https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html 
 - https://www.youtube.com/watch?v=-vPXS8UuJoI&ab_channel=AnsiblePilot
+
+## Test Windows Host
+
+Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `Windows Test`. This project will use this git repository as its source
+
+Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) named `Hello World` that is in the project `Windows Test`
+
+
+
+

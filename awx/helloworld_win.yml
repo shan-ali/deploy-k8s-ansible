@@ -1,9 +1,0 @@
----
-- name: Hello World!
-  hosts: all
- 
-  tasks:
- 
-  - name: Hello Local
-    win_shell: |
-      Write-Host Hello from Local
