@@ -145,7 +145,7 @@ Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quic
 
 Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user.
 
-![image](https://user-images.githubusercontent.com/16169323/162064384-1a30c2cc-d07f-48a3-bfb9-0a5259fddf82.png)
+![image](https://user-images.githubusercontent.com/16169323/162064613-d037bba3-70c4-484a-bcd7-610a2de21c5c.png)
 
 ```
 ansible_user: ansible
