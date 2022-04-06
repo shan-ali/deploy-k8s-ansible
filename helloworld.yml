@@ -1,7 +1,8 @@
 ---
-- name: Hello World
+# This playbook uses the win_ping module to test connectivity to Windows hosts
+- name: Ping 
   hosts: all 
-  tasks: 
-  - name: print from local windows host
-    win_shell: |
-      Write-Host Hello World!
+
+  tasks:
+  - name: ping
+    win_ping:
