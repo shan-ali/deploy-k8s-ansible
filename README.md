@@ -8,12 +8,23 @@ This is all done on a Windows 10 machine
 
 - [Docker Desktop](https://www.docker.com/products/docker-desktop) with Kubernetes enabled
 - [Multipass](https://multipass.run/docs/installing-on-windows)
-- [Chocolatey](https://chocolatey.org/install) (to install Kustomize)
-- [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/)
+- [Chocolatey](https://chocolatey.org/install)
+- [Python 3](https://www.python.org/downloads/windows/) - will use chocolatey to install
+- [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/) - will use chocolatey to install
 
 ## Technologies
 
 - [AWX](https://github.com/ansible/awx/)
+
+## Install Python
+
+Open an cmd terminal as Administrator
+
+```
+choco install python -y
+```
+
+Reference: https://community.chocolatey.org/packages/python/3.10.4
 
 ## Install Kustomize
 
