@@ -8,3 +8,7 @@
   - name: list
     shell: ls
 
+  - name: copy network
+    ansible.builtin.copy:
+      src: 01-controller-network.yaml
+      dest: ./01-controller-network.yaml
