@@ -48,7 +48,7 @@
       multipass transfer ./multipass-provision-vms/01-controller-network.yaml controller:01-controller-network.yaml
       multipass transfer ./multipass-provision-vms/01-worker-network.yaml worker:01-worker-network.yaml
       multipass exec controller -- sudo cp 01-controller-network.yaml /etc/netplan/ 
-      multipass exec controller -- sudo cp 01-worker-network.yaml /etc/netplan/ 
+      multipass exec worker -- sudo cp 01-worker-network.yaml /etc/netplan/ 
   
   - name: restart VMs to apply netplan changes
     win_shell: |
