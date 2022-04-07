@@ -4,8 +4,8 @@
 
   tasks: 
 
-  - name: list file
-    win_shell: ls
+  - name: multipass list (before)
+    win_shell: multipass list
 
   - name: multipass clean 
     win_shell: |
@@ -17,4 +17,7 @@
 
   - name: multipass start controller
     win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name worker
+
+  - name: multipass list (after)
+    win_shell: multipass list
 
