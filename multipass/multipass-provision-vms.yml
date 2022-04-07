@@ -23,10 +23,10 @@
 
   - name: Create a directory if it does not exist
     win_shell: |
-      $FolderName = "~/tmp"
+      $FolderName = "./multipass-provision-vms"
       if (Test-Path $FolderName) {   
         Write-Host "Folder Exists"
-        # Perform Delete file from folder operation
+        Remove-Item './multipass-provision-vms' -Recurse
       }else{  
         #PowerShell Create directory if not exists
         New-Item $FolderName -ItemType Directory
@@ -36,10 +36,10 @@
   - name: copy network netplan for controller
     ansible.builtin.copy:
       src: 01-controller-network.yaml
-      dest: ./tmp/01-controller-network.yaml
+      dest: ./multipass-provision-vms/01-controller-network.yaml
 
   - name: copy network netplan for worker
     ansible.builtin.copy:
       src: 01-worker-network.yaml
-      dest: ./tmp/01-worker-network.yaml
+      dest: ./multipass-provision-vms/01-worker-network.yaml
 
