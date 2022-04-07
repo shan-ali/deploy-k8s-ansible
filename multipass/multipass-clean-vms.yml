@@ -1,0 +1,14 @@
+---
+- name: multipass-clean-vms
+  hosts: all 
+
+  tasks: 
+
+  - name: multipass list
+    win_shell: multipass list
+
+  - name: multipass clean 
+    win_shell: |
+      multipass delete controller worker
+      multipass purge
+
