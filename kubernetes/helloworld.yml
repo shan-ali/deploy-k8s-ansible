@@ -1,0 +1,8 @@
+---
+- name: Hello World
+  hosts: all 
+
+  tasks: 
+
+  - name: print from vm
+    shell: echo hello
