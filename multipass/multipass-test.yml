@@ -1,7 +1,7 @@
 ---
 - name: multipass-clean-vms
-  hosts: 127.0.0.1
-  connection: local 
+  hosts: all
+  #connection: local 
 
   tasks: 
 
