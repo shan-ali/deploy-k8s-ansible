@@ -1,0 +1,20 @@
+---
+- name: multipass-provision-vms
+  hosts: all 
+
+  tasks: 
+
+  - name: list file
+    win_shell: ls
+
+  - name: multipass clean 
+    win_shell: |
+      multipass delete controller worker
+      multipass purge
+
+  - name: multipass start controller
+    win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name controller
+
+  - name: multipass start controller
+    win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name worker
+
