@@ -1,0 +1,44 @@
+groups:
+  - docker
+
+packages:
+  - openssl
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg
+  - lsb-release
+
+write_files:
+# should ensure net.bridge.bridge-nf-call-iptables is set to 1 in your sysctl config
+- content: |
+    br_netfilter
+  path: /etc/modules-load.d/k8s.conf
+- content: |
+    net.bridge.bridge-nf-call-ip6tables = 1
+    net.bridge.bridge-nf-call-iptables = 1
+  path: /etc/sysctl.d/k8s.conf
+# the cgroup driver for both k8s and docker need to be the same. Setting it to systemd for docker, by default it is cgroupfs
+# more information: https://kubernetes.io/docs/tasks/administer-cluster/kubeadm/configure-cgroup-driver/
+- content: |
+    {
+      "exec-opts": ["native.cgroupdriver=systemd"]
+    }
+  path: /etc/docker/daemon.json
+
+runcmd:
+  - adduser ubuntu docker
+  - apt-get update
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+  - apt-get update
+  - apt-get install -y docker-ce docker-ce-cli containerd.io
+  - sudo apt-get install docker-ce=20.10.12 docker-ce-cli=20.10.12 containerd.io
+  # let iptable see bridged traffic
+  - sudo sysctl --system
+  # install minikube
+  - curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+  - sudo install minikube-linux-amd64 /usr/local/bin/minikube
+  # install kustomize
+  - curl -s "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh"  | bash
+  - sudo mv kustomize /bin/

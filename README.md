@@ -4,45 +4,64 @@ Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 
 ## Requirements
 
-This is all done on a Windows 10 machine
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) with Kubernetes enabled
 - [Multipass](https://multipass.run/docs/installing-on-windows)
-- [Chocolatey](https://chocolatey.org/install)
-- [Python 3](https://www.python.org/downloads/windows/) - will use chocolatey to install
-- [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/) - will use chocolatey to install
 
 ## Technologies
 
 - [AWX](https://github.com/ansible/awx/)
+- [minikube](https://minikube.sigs.k8s.io/docs/start/)
 
-## Install Python
+## Multipass Setup
 
->Note: Open an cmd terminal as Administrator
+Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-init-with-multipass) yaml files to customize hosts on launch. In the `awx/multipass` directory there is a `awx-cloud-config.yml` file that does the following when provisioning the vm. 
 
-```
-choco install python -y
-```
-
-Reference: https://community.chocolatey.org/packages/python/3.10.4
-
-## Install Kustomize
-
->Note: Open an cmd terminal as Administrator
+1. installs required packages
+2. installs docker 20.10.12 as outlined in the [Offical Docker installation documention](https://docs.docker.com/engine/install/ubuntu/)
+3. installs [minikube](https://minikube.sigs.k8s.io/docs/start/)
+4. installs [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+5. sets the cgroup driver to systemd for docker, by default it is cgroupfs
 
 ```
-choco install kustomize -y 
+multipass launch --cloud-init awx/multipass/awx-cloud-config.yml --disk 15G --mem 3g --cpus 4 --name awx
 ```
 
-Reference: https://kubectl.docs.kubernetes.io/installation/kustomize/chocolatey/
+This will create a multipass vm named `awx`
 
-## Install AWX on Docker Desktop K8s Cluster
+## Minikube Setup
 
+Login to the newly created `awx` vm
+
+```
+multipass shell awx
+```
+
+Start minikube
+
+```
+minikube start --memory=2g --cpus=4
+```
+>Note: Using lower mem/cpu requirements may cause issues when starting awx pods
+
+Set alias for minikube kubectl command to kubectl
+
+```
+alias kubectl="minikube kubectl --"
+```
+
+References: https://minikube.sigs.k8s.io/docs/start/
+
+## AWX Setup 
+
+### Clone Git Repository
+
+```
+git clone https://github.com/shan-ali/install-awx-ansible-k8s
+cd install-awx-ansible-k8s
+```
 ### Install AWX Operator
 
 ```
-cd awx/awx-operator
-kustomize build . | kubectl apply -f -
+kustomize build ./awx/awx-operator/ | kubectl apply -f -
 ```
 
 Make sure `awx-operator` is running
@@ -58,8 +77,7 @@ awx-operator-controller-manager-557589c5f4-ck5t6   2/2     Running   0          
 ### Install AWX
 
 ```
-cd ../awx-main
-kustomize build . | kubectl apply -f -
+kustomize build ./awx/awx-main/ | kubectl apply -f -
 ```
 
 View logs
@@ -94,13 +112,19 @@ awx-service    NodePort    10.107.73.105   <none>        80:30080/TCP   3m18s
 ```
 ### Access AWX
 
-You can now access the AWX webpage by going to `localhost:30080`. Port is from the awx-service NodePort from above. 
+Expose Kubernetes port for external accesss
+
+```
+kubectl port-forward --address 0.0.0.0 service/awx-service 8080:80 -n awx &> /dev/null &
+```
+You can now access the AWX webpage by going to `<multipass-awx-vm-ip-address>:8080`
+
+>Note: you can find your ip address with `multipass list`
 
 By default, the admin user is `admin` and the password is available in the `<resourcename>-admin-password` secret. To retrieve the admin password, run:
 
 ```
-$awxAdminPassword=$(kubectl get secret awx-admin-password -o jsonpath="{.data.password}" -n awx)
-[Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($awxAdminPassword))
+kubectl get secret awx-admin-password -o jsonpath="{.data.password}" -n awx| base64 --decode
 ```
 
 Reference:
@@ -175,5 +199,3 @@ Launch the job
 
 ## Provision Multipass VMs using Ansible
 
-
-tyest
