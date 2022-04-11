@@ -38,7 +38,7 @@ multipass shell awx
 Start minikube
 
 ```
-minikube start --memory=2g --cpus=4
+minikube start --memory=3g --cpus=4
 ```
 >Note: Using lower mem/cpu requirements may cause issues when starting awx pods
 
