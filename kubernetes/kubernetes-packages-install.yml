@@ -1,0 +1,47 @@
+---
+- name: kubernetes-packages-install
+  hosts: all 
+
+  tasks: 
+
+  - name: Install Standard Packages
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+    loop:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+  
+  - name: Add Docker’s official GPG key
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+
+  - name: Install Docker
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes
+    loop:
+      - docker-ce=20.10.12
+      - docker-ce-cli=20.10.12
+      - containerd.io=20.10.12
+  
+  - name: Set cgroup to systemd for Docker
+    copy:
+      dest: "/etc/docker/daemon.json"
+      content: |
+        {
+          "exec-opts": ["native.cgroupdriver=systemd"]
+        }
+  
+  - name: Let iptable see Bridged Traffic
+    shell: sudo sysctl --system
+
+  
+

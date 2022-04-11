@@ -143,7 +143,46 @@ The steps to add your Windows machine as a node can be found here: [configure-wi
 
 If you have done the above step of configuring your Windows host as an Ansible node you can now provision your K8s Multipass VMs following the the steps in [provision-multipass-vms.md](docs/provision-multipass-vms.md). Otherwise skip to the [Provision VMs](#provision-vms) section. 
 
+Once you have successfully completed this, continue from [Install Packages](#install-packages)
+
 ## Provision VMs
+
+Change directory to `multipass`
+```
+cd multipass
+```
+
+Launch VMs
+```
+multipass launch --disk 5G --mem 1G --cpus 1 --name controller
+multipass launch --disk 5G --mem 1G --cpus 1 --name worker
+```
+
+Copy netplan configuration
+
+```
+multipass transfer 01-controller-network.yaml controller:01-controller-network.yaml
+multipass transfer 01-worker-network.yaml worker:01-worker-network.yaml
+multipass exec controller -- sudo cp 01-controller-network.yaml /etc/netplan/ 
+multipass exec worker -- sudo cp 01-worker-network.yaml /etc/netplan/ 
+```
+
+Restart VMs to apply netplan changes
+```
+multipass restart controller worker
+```
+
+Leave the multipass directory
+```
+cd ..
+```
+
+## Install Packages
+
+
+
+
+
 
 
 
