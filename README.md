@@ -22,7 +22,7 @@ Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-in
 5. sets the cgroup driver to systemd for docker, by default it is cgroupfs
 
 ```
-multipass launch --cloud-init awx/multipass/awx-cloud-config.yml --disk 15G --mem 3g --cpus 4 --name awx
+multipass launch --cloud-init awx/multipass/awx-cloud-config.yml --disk 15G --mem 4G --cpus 4 --name awx
 ```
 
 This will create a multipass vm named `awx`
