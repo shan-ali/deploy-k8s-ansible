@@ -7,14 +7,9 @@
   - name: multipass list (before)
     win_shell: multipass list
 
-  - name: multipass clean controller 
+  - name: multipass clean
     win_shell: |
-      multipass delete controller
-      multipass purge
-  
-  - name: multipass clean worker 
-    win_shell: |
-      multipass delete worker
+      multipass delete controller worker
       multipass purge
 
   - name: multipass start controller
