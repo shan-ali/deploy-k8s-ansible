@@ -228,6 +228,18 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@awx
 EOF
 ```
 
+## Add Private Key as a Credential
+
+Copy the output of the private key file
+
+```
+cat /home/ubuntu/.ssh/id_rsa
+```
+
+Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `SSH AWX` with user `ubuntu`. Paste the content of your private key in the `SSH Private Key` section.
+
+![image](https://user-images.githubusercontent.com/16169323/162825145-a1f673a7-501f-42ca-b080-b668561ad4e5.png)
+
 ## Install Packages
 
 Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `K8s Cluster` if you have not already. This project will use this git repository as its source.
