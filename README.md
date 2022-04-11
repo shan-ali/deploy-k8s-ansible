@@ -176,9 +176,69 @@ Leave the multipass directory
 ```
 cd ..
 ```
+## Add New VMs to AWX
+
+Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `K8s Cluster`
+
+Add our `controller` and `worker` VMs as Host(s) to AWX. Make sure they are part of the `K8s Cluster` Inventory. 
+
+![image](https://user-images.githubusercontent.com/16169323/162816434-57f54a41-2ad9-4b94-8cb2-947782f8ac38.png)
+
+>Note: we can use the name of the VM or the IP address
+
+## Setup SSH Keys
+
+Login to the `awx` multipass instance if you are not already
+
+```
+multipass shell awx
+```
+
+Generate public and private keys. You can leave all setting as default. 
+```
+ssh-keygen -t rsa
+```
+
+At this point you should have 
+- private key: `/home/ubuntu/.ssh/id_rsa`
+- public key: `/home/ubuntu/.ssh/id_rsa.pub`
+
+View the generated public key ID at:
+
+```
+cat /home/ubuntu/.ssh/id_rsa.pub
+```
+>output
+
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@awx
+```
+
+Move public key of awx to `controller` and `worker` VMs. Access each VM using the following multipass command
+
+```
+multipass shell controller
+```
+
+Then add public key from awx to the authorized keys for all hosts
+
+```
+cat >> ~/.ssh/authorized_keys <<EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@awx
+EOF
+```
 
 ## Install Packages
 
+Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `K8s Cluster` if you have not already. This project will use this git repository as its source.
+
+Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
+
+  1. Name is `K8s Package Install` 
+  2. Inventory is `Windows Local`
+  4. Project is `K8s Cluster`
+  5. Playbook is [multipass/multipass-provision-vms.yml](/multipass/multipass-provision-vms.yml)
+  6. Credentials are `Windows Ansible User`
 
 
 
