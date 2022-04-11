@@ -52,14 +52,6 @@ Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/qui
 
 ![image](https://user-images.githubusercontent.com/16169323/162782640-ebccbaf4-69b3-4a95-b857-18a3f2e3f98e.png)
 
-
-
-
-
-References:
-- https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html 
-- https://www.youtube.com/watch?v=-vPXS8UuJoI&ab_channel=AnsiblePilot
-
 ## Test Windows Host (Optional)
 
 Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `Windows Test`. This project will use this git repository as its source
@@ -68,14 +60,11 @@ Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quicks
 
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) named `Hello World` that is in the project `Windows Test`. You will use the Playbook `helloworld.yml` that is in the root of this repository. 
 
-![image](https://user-images.githubusercontent.com/16169323/162069250-243d323b-0141-4186-a14f-cd21cf3d415b.png)
+![image](https://user-images.githubusercontent.com/16169323/162783266-2182e2ff-6fd5-44ce-ba86-85e893f2b7b7.png)
 
 Launch the job
 
 ![image](https://user-images.githubusercontent.com/16169323/162069552-a6d32138-9d14-476c-a627-05633bf6ddd9.png)
-
-## Provision Multipass VMs using Ansible
-
 
 
 
