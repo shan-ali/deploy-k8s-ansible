@@ -9,7 +9,8 @@
 
   - name: multipass clean 
     win_shell: |
-      multipass delete controller worker
+      multipass delete controller
+      multipass delete worker
       multipass purge
 
   - name: multipass start controller
