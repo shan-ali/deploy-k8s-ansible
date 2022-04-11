@@ -18,10 +18,10 @@
       multipass purge
 
   - name: multipass start controller
-    win_shell: multipass launch --disk 5G --mem 250M --cpus 1 --name controller
+    win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name controller
 
   - name: multipass start worker
-    win_shell: multipass launch --disk 5G --mem 250M --cpus 1 --name worker
+    win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name worker
 
   - name: multipass list (after)
     win_shell: multipass list
