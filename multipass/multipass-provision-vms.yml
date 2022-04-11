@@ -15,7 +15,7 @@
   - name: multipass start controller
     win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name controller
 
-  - name: multipass start controller
+  - name: multipass start worker
     win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name worker
 
   - name: multipass list (after)
