@@ -137,11 +137,11 @@ Now that we have AWX up and running, we can start configuring it and adding node
 
 If you would like to automate the provisoning of these VMs, you will need to add your Windows local machine as a node to AWX. Otherwise, you can provision the VMs with `multipass` commands manually by skipping to the [Provision VMs](#provision-vms) section. 
 
-The steps to add your Windows machine as a node can be found here: [configure-windows-node.md](configure-windows-node.md). 
+The steps to add your Windows machine as a node can be found here: [configure-windows-node.md](docs/configure-windows-node.md). 
 
 ## Provision VMs via Playbook (Optional)
 
-If you have done the above step of configuring your Windows host as an Ansible node you can now provision your K8s Multipass VMs following the the steps in [provision-multipass-vms.md](provision-multipass-vms.md). Otherwise skip to the [Provision VMs](#provision-vms) section. 
+If you have done the above step of configuring your Windows host as an Ansible node you can now provision your K8s Multipass VMs following the the steps in [provision-multipass-vms.md](docs/provision-multipass-vms.md). Otherwise skip to the [Provision VMs](#provision-vms) section. 
 
 ## Provision VMs
 
