@@ -34,17 +34,27 @@ Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quic
 
 ![image](https://user-images.githubusercontent.com/16169323/162064083-0a524e50-1699-4584-97b0-2bdea94c7cac.png)
 
-Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user.
+Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user. 
 
-![image](https://user-images.githubusercontent.com/16169323/162068763-404a51c3-1da5-4fed-88b4-50e92e9b5d7b.png)
+>Note: credential for ansible user will be added later on as an object in AWX
+
+![image](https://user-images.githubusercontent.com/16169323/162782967-3372148f-ca4e-4a2b-851d-3167365db1ef.png)
 
 ```
-ansible_user: ansible
-ansible_password: <password>
 ansible_connection: winrm
 ansible_winrm_transport: basic
 ansible_winrm_server_cert_validation: ignore
 ```
+
+## Add Windows Ansible User Credentials
+
+Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `Windows Ansible User`
+
+![image](https://user-images.githubusercontent.com/16169323/162782640-ebccbaf4-69b3-4a95-b857-18a3f2e3f98e.png)
+
+
+
+
 
 References:
 - https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html 
