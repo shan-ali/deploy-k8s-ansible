@@ -188,6 +188,8 @@ Add our `controller` and `worker` VMs as Host(s) to AWX. Make sure they are part
 
 ## Setup SSH Keys
 
+### Generate Keys
+
 Login to the `awx` multipass instance if you are not already
 
 ```
@@ -202,6 +204,8 @@ ssh-keygen -t rsa
 At this point you should have 
 - private key: `/home/ubuntu/.ssh/id_rsa`
 - public key: `/home/ubuntu/.ssh/id_rsa.pub`
+
+### Copy Public Key to Hosts
 
 View the generated public key ID at:
 
@@ -228,7 +232,7 @@ ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@awx
 EOF
 ```
 
-## Add Private Key as a Credential
+### Add Private Key as a Credential
 
 Copy the output of the private key file
 
@@ -247,10 +251,14 @@ Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quicks
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
 
   1. Name is `K8s Package Install` 
-  2. Inventory is `Windows Local`
+  2. Inventory is `K8s Cluster`
   4. Project is `K8s Cluster`
-  5. Playbook is [multipass/multipass-provision-vms.yml](/multipass/multipass-provision-vms.yml)
-  6. Credentials are `Windows Ansible User`
+  5. Playbook is [kubernetes/kubernetes-packages-install.yml](kubernetes/kubernetes-packages-install.yml)
+  6. Credentials are `SSH AWX`
+
+![image](https://user-images.githubusercontent.com/16169323/162826951-1bc339e7-60de-4045-9b60-af792fb747f1.png)
+
+
 
 
 
