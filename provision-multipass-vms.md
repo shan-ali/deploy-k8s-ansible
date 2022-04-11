@@ -24,4 +24,10 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 ## Launch Multipass Provision VMs Job
 
+The `multipass-provision-vms.yml` playbook will essentially create two Multipass VMs. It will also apply netplan configurations to create static IP addresses for each VM. 
+1. controller - 172.22.5.11/20
+2. worker - 172.22.5.21/20
+
+![image](https://user-images.githubusercontent.com/16169323/162809617-eeb5b3aa-91f6-400e-9746-b232e741a415.png)
+
 
