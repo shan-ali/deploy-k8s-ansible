@@ -6,6 +6,12 @@
 
   - name: Install Standard Packages
     apt:
+      name: curl
+      state: latest
+      update_cache: yes
+
+  - name: Install Standard Packages
+    apt:
       name: "{{item}}"
       state: latest
       update_cache: yes
