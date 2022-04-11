@@ -12,16 +12,16 @@
       multipass delete controller
       multipass purge
   
-  #- name: multipass clean worker 
-  #  win_shell: |
-  #    multipass delete worker
-  #    multipass purge
+  - name: multipass clean worker 
+    win_shell: |
+      multipass delete worker
+      multipass purge
 
   - name: multipass start controller
-    win_shell: multipass launch --disk 5G --mem 100M --cpus 1 --name controller
+    win_shell: multipass launch --disk 5G --mem 1G --cpus 1 --name controller
 
-  #- name: multipass start worker
-  #  win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name worker
+  - name: multipass start worker
+    win_shell: multipass launch --disk 5G --mem 1G --cpus 1 --name worker
 
   - name: multipass list (after)
     win_shell: multipass list
