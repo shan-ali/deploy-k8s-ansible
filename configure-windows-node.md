@@ -48,7 +48,9 @@ ansible_winrm_server_cert_validation: ignore
 
 ## Add Windows Ansible User Credentials
 
-Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `Windows Ansible User`
+Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `Windows Ansible User`. 
+
+Any [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) that will run on your Windows local will need to use these credential.s
 
 ![image](https://user-images.githubusercontent.com/16169323/162782640-ebccbaf4-69b3-4a95-b857-18a3f2e3f98e.png)
 
