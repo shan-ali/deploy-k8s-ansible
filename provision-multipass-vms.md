@@ -12,9 +12,16 @@ Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quicks
 
 ## Create Multipass Provisioning Job
 
-Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) named `Multipass Provision VMs` that is in the project `K8s Cluster`. You will use the Playbook [multipass-provision-vms.yml](/multipass/multipass-provision-vms.yml) that is in the `multipass` directory. 
+Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
 
+  1. Name is `Multipass Provision VMs` 
+  2. Inventory is `Windows Local`
+  4. Project is `K8s Cluster`
+  5. Playbook is [multipass/multipass-provision-vms.yml](/multipass/multipass-provision-vms.yml)
+  6. Credentials are `Windows Ansible User`
 
+![image](https://user-images.githubusercontent.com/16169323/162786182-0d563e31-3b71-4275-973a-457722e5443a.png)
 
+## Launch Multipass Provision VMs Job
 
 
