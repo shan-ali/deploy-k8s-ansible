@@ -18,9 +18,6 @@
   - name: multipass start worker
     win_shell: multipass launch --disk 5G --mem 1G --cpus 1 --name worker
 
-  - name: multipass list (after)
-    win_shell: multipass list
-
   - name: Create a directory if it does not exist
     win_shell: |
       $FolderName = "./multipass-provision-vms"
@@ -51,4 +48,7 @@
   - name: restart VMs to apply netplan changes
     win_shell: |
       multipass restart controller worker
+
+  - name: multipass list (after)
+    win_shell: multipass list
 
