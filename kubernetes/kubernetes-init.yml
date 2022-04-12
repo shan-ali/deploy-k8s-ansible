@@ -9,8 +9,8 @@
 
   - name: delete cni configuration in /etc/cni/net.d
     file:
-    state: absent
-    path: /etc/cni/net.d
+      state: absent
+      path: /etc/cni/net.d
 
   - name: kubeamd init
     become: yes
