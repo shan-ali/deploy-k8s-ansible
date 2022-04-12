@@ -23,7 +23,7 @@
 
   - name: Copy file with owner and permissions
     copy:
-      src: /etc/kubernetes/admin.conf
+      remote_src: /etc/kubernetes/admin.conf
       dest: $HOME/.kube/config
       owner: ubuntu
       group: ubuntu
