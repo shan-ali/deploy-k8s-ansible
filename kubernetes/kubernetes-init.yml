@@ -22,6 +22,7 @@
       state: directory
 
   - name: Copy file with owner and permissions
+    become: yes
     copy:
       src: /etc/kubernetes/admin.conf
       remote_src: yes
