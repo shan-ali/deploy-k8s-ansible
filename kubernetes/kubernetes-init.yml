@@ -26,7 +26,7 @@
     copy:
       src: /etc/kubernetes/admin.conf
       remote_src: yes
-      dest: $HOME/.kube/config
+      dest: /home/ubuntu/.kube/config
       owner: ubuntu
       group: ubuntu
 
