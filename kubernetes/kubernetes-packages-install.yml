@@ -51,6 +51,7 @@
         }
 
   - name: restart docker service
+    become: yes
     service:
       name: docker
       state: restarted
