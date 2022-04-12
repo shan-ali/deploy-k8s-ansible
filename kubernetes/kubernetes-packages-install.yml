@@ -4,22 +4,23 @@
 
   tasks: 
 
-  - name: packages | ensure apt list dir exists
-    file:
-      path: /var/lib/apt/lists/
-      state: directory
-      mode: 0755
+  # - name: packages | ensure apt list dir exists
+  #   file:
+  #     path: /var/lib/apt/lists/
+  #     state: directory
+  #     mode: 0755
 
-  - name: update apt list
-    become: yes
-    apt:
-      update_cache: yes
-    
+  # - name: update apt list
+  #   become: yes
+  #   apt:
+  #     update_cache: yes    
 
   - name: install docker required packages
+    become: yes
     apt:
       name: "{{item}}"
       state: latest
+      update_cache: yes 
     loop:
       - apt-transport-https
       - ca-certificates
@@ -28,15 +29,18 @@
       - lsb-release
   
   - name: add docker official gpg key
+    become: yes
     apt_key:
       url: https://download.docker.com/linux/ubuntu/gpg
       state: present
 
 
   - name: install docker
+    become: yes
     apt:
       name: "{{item}}"
       state: latest
+      update_cache: yes 
     loop:
       - docker-ce=20.10.12
       - docker-ce-cli=20.10.12
