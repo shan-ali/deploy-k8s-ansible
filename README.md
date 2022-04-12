@@ -4,45 +4,67 @@ Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 
 ## Requirements
 
-This is all done on a Windows 10 machine
-
-- [Docker Desktop](https://www.docker.com/products/docker-desktop) with Kubernetes enabled
 - [Multipass](https://multipass.run/docs/installing-on-windows)
-- [Chocolatey](https://chocolatey.org/install)
-- [Python 3](https://www.python.org/downloads/windows/) - will use chocolatey to install
-- [Kustomize](https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/) - will use chocolatey to install
 
 ## Technologies
 
 - [AWX](https://github.com/ansible/awx/)
+- [minikube](https://minikube.sigs.k8s.io/docs/start/)
+- [Docker](https://docs.docker.com/)
+- [Kubernetes](https://kubernetes.io/docs/home/)
+- [Ansible](https://docs.ansible.com/ansible/latest/index.html)
 
-## Install Python
+## Multipass Setup
 
->Note: Open an cmd terminal as Administrator
+Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-init-with-multipass) yaml files to customize hosts on launch. In the `awx/multipass` directory there is a `awx-cloud-config.yml` file that does the following when provisioning the vm. 
+
+1. installs required packages
+2. installs docker 20.10.12 as outlined in the [Offical Docker installation documention](https://docs.docker.com/engine/install/ubuntu/)
+3. installs [minikube](https://minikube.sigs.k8s.io/docs/start/)
+4. installs [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+5. sets the cgroup driver to systemd for docker, by default it is cgroupfs
 
 ```
-choco install python -y
+multipass launch --cloud-init awx/multipass/awx-cloud-config.yml --disk 15G --mem 4G --cpus 4 --name awx
 ```
 
-Reference: https://community.chocolatey.org/packages/python/3.10.4
+This will create a multipass vm named `awx`
 
-## Install Kustomize
+## Minikube Setup
 
->Note: Open an cmd terminal as Administrator
+Login to the newly created `awx` vm
 
 ```
-choco install kustomize -y 
+multipass shell awx
 ```
 
-Reference: https://kubectl.docs.kubernetes.io/installation/kustomize/chocolatey/
+Start minikube
 
-## Install AWX on Docker Desktop K8s Cluster
+```
+minikube start --memory=3g --cpus=4
+```
+>Note: Using lower mem/cpu requirements may cause issues when starting awx pods
 
+Set alias for minikube kubectl command to kubectl
+
+```
+alias kubectl="minikube kubectl --"
+```
+
+References: https://minikube.sigs.k8s.io/docs/start/
+
+## AWX Setup 
+
+### Clone Git Repository
+
+```
+git clone https://github.com/shan-ali/install-awx-ansible-k8s
+cd install-awx-ansible-k8s
+```
 ### Install AWX Operator
 
 ```
-cd awx/awx-operator
-kustomize build . | kubectl apply -f -
+kustomize build ./awx/awx-operator/ | kubectl apply -f -
 ```
 
 Make sure `awx-operator` is running
@@ -58,8 +80,7 @@ awx-operator-controller-manager-557589c5f4-ck5t6   2/2     Running   0          
 ### Install AWX
 
 ```
-cd ../awx-main
-kustomize build . | kubectl apply -f -
+kustomize build ./awx/awx-main/ | kubectl apply -f -
 ```
 
 View logs
@@ -94,86 +115,158 @@ awx-service    NodePort    10.107.73.105   <none>        80:30080/TCP   3m18s
 ```
 ### Access AWX
 
-You can now access the AWX webpage by going to `localhost:30080`. Port is from the awx-service NodePort from above. 
+Expose Kubernetes port for external accesss
+
+```
+kubectl port-forward --address 0.0.0.0 service/awx-service 8080:80 -n awx &> /dev/null &
+```
+You can now access the AWX webpage by going to `<multipass-awx-vm-ip-address>:8080` or `http://awx.mshome.net:8080/`
+
+>Note: you can find your ip address with `multipass list`
 
 By default, the admin user is `admin` and the password is available in the `<resourcename>-admin-password` secret. To retrieve the admin password, run:
 
 ```
-$awxAdminPassword=$(kubectl get secret awx-admin-password -o jsonpath="{.data.password}" -n awx)
-[Text.Encoding]::Utf8.GetString([Convert]::FromBase64String($awxAdminPassword))
+kubectl get secret awx-admin-password -o jsonpath="{.data.password}" -n awx| base64 --decode
 ```
 
 Reference:
 - https://github.com/ansible/awx/blob/devel/INSTALL.md
 - https://github.com/ansible/awx-operator 
 
-## Configure Your Local Windows Host as a Node
+## Configure Your Local Windows Host as a Node (Optional)
 
-Normally ansible uses SSH to communicate with hosts, however, for windows we need to use WinRM. We will be follwing the steps outlined in [Official Windows Setup](https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html)
+Now that we have AWX up and running, we can start configuring it and adding nodes to it. The next main step will be to setup and run a playbook to deploy a K8s cluster on two Multipass VMs. 
 
-Since we are on Windows 10, we can skip the initial steps of upgrading the powershell and .NET Framework versions. If you are on an older version of windows please follow the steps in [upgrading-powershell-and-net-framework](https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html#upgrading-powershell-and-net-framework).
+If you would like to automate the provisoning of these VMs, you will need to add your Windows local machine as a node to AWX. Otherwise, you can provision the VMs with `multipass` commands manually by skipping to the [Provision VMs](#provision-vms) section. 
 
-### Create Ansible User
+The steps to add your Windows machine as a node can be found here: [configure-windows-node.md](docs/configure-windows-node.md). 
 
-You will need to manually create an `ansible` windows user on your system that is part of the `Administrators` group. 
+## Provision VMs via Playbook (Optional)
 
-You can follow the step in this video: [Configure a Windows Host for Ansible - ansible winrm](https://www.youtube.com/watch?v=-vPXS8UuJoI&ab_channel=AnsiblePilot)
+If you have done the above step of configuring your Windows host as an Ansible node you can now provision your K8s Multipass VMs following the the steps in [provision-multipass-vms.md](docs/provision-multipass-vms.md). Otherwise skip to the [Provision VMs](#provision-vms) section. 
 
-### WinRM Setup
+Once you have successfully completed this, continue from [Install Packages](#install-packages)
 
-"There are two main components of the WinRM service that governs how Ansible can interface with the Windows host: the listener and the service configuration settings" 
+## Provision Kubernetes VMs
 
-The "script `ConfigureRemotingForAnsible.ps1` can be used to set up the basics. This script sets up both HTTP and HTTPS listeners with a self-signed certificate and enables the Basic authentication option on the service."
-
->Note: Open a powershell terminal as Administrator
-
+Change directory to `kubernetes/multipass`
 ```
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$url = "https://raw.githubusercontent.com/ansible/ansible/devel/examples/scripts/ConfigureRemotingForAnsible.ps1"
-$file = "$env:temp\ConfigureRemotingForAnsible.ps1"
-
-(New-Object -TypeName System.Net.WebClient).DownloadFile($url, $file)
-
-powershell.exe -ExecutionPolicy ByPass -File $file
+cd kubernetes/multipass
 ```
 
-## Add Windows Host to AWX
-
-Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `Windows Local`
-
-![image](https://user-images.githubusercontent.com/16169323/162064083-0a524e50-1699-4584-97b0-2bdea94c7cac.png)
-
-Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user.
-
-![image](https://user-images.githubusercontent.com/16169323/162068763-404a51c3-1da5-4fed-88b4-50e92e9b5d7b.png)
-
+Launch VMs
 ```
-ansible_user: ansible
-ansible_password: <password>
-ansible_connection: winrm
-ansible_winrm_transport: basic
-ansible_winrm_server_cert_validation: ignore
+multipass launch --disk 5G --mem 1G --cpus 1 --name controller
+multipass launch --disk 5G --mem 1G --cpus 1 --name worker
 ```
 
-References:
-- https://docs.ansible.com/ansible/latest/user_guide/windows_setup.html 
-- https://www.youtube.com/watch?v=-vPXS8UuJoI&ab_channel=AnsiblePilot
+Copy netplan configuration
 
-## Test Windows Host
+```
+multipass transfer 01-controller-network.yaml controller:01-controller-network.yaml
+multipass transfer 01-worker-network.yaml worker:01-worker-network.yaml
+multipass exec controller -- sudo cp 01-controller-network.yaml /etc/netplan/ 
+multipass exec worker -- sudo cp 01-worker-network.yaml /etc/netplan/ 
+```
 
-Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `Windows Test`. This project will use this git repository as its source
+Restart VMs to apply netplan changes
+```
+multipass restart controller worker
+```
 
-![image](https://user-images.githubusercontent.com/16169323/162069179-a40eb978-8e68-4bc1-b610-675a7868cdcb.png)
+Leave the directory
+```
+cd ../..
+```
+## Add New VMs to AWX
 
-Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) named `Hello World` that is in the project `Windows Test`. You will use the Playbook `helloworld.yml` that is in the root of this repository. 
+Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `K8s Cluster`
 
-![image](https://user-images.githubusercontent.com/16169323/162069250-243d323b-0141-4186-a14f-cd21cf3d415b.png)
+Add our `controller` and `worker` VMs as Host(s) to AWX. Make sure they are part of the `K8s Cluster` Inventory. 
 
-Launch the job
+![image](https://user-images.githubusercontent.com/16169323/162816434-57f54a41-2ad9-4b94-8cb2-947782f8ac38.png)
 
-![image](https://user-images.githubusercontent.com/16169323/162069552-a6d32138-9d14-476c-a627-05633bf6ddd9.png)
+>Note: we can use the name of the VM or the IP address
 
-## Provision Multipass VMs using Ansible
+## Setup SSH Keys
+
+### Generate Keys
+
+Login to the `awx` multipass instance if you are not already
+
+```
+multipass shell awx
+```
+
+Generate public and private keys. You can leave all setting as default. 
+```
+ssh-keygen -t rsa
+```
+
+At this point you should have 
+- private key: `/home/ubuntu/.ssh/id_rsa`
+- public key: `/home/ubuntu/.ssh/id_rsa.pub`
+
+### Copy Public Key to Hosts
+
+View the generated public key ID at:
+
+```
+cat /home/ubuntu/.ssh/id_rsa.pub
+```
+>output
+
+```
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@awx
+```
+
+Move public key of awx to `controller` and `worker` VMs. Access each VM using the following multipass command
+
+```
+multipass shell controller
+```
+
+Then add public key from awx to the authorized keys for all hosts
+
+```
+cat >> ~/.ssh/authorized_keys <<EOF
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQD......8+08b ubuntu@awx
+EOF
+```
+
+### Add Private Key as a Credential
+
+Copy the output of the private key file
+
+```
+cat /home/ubuntu/.ssh/id_rsa
+```
+
+Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `SSH AWX` with user `ubuntu`. Paste the content of your private key in the `SSH Private Key` section.
+
+![image](https://user-images.githubusercontent.com/16169323/162825145-a1f673a7-501f-42ca-b080-b668561ad4e5.png)
+
+## Install Packages
+
+Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `K8s Cluster` if you have not already. This project will use this git repository as its source.
+
+Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
+
+  1. Name is `K8s Package Install` 
+  2. Inventory is `K8s Cluster`
+  4. Project is `K8s Cluster`
+  5. Playbook is [kubernetes/kubernetes-packages-install.yml](kubernetes/kubernetes-packages-install.yml)
+  6. Credentials are `SSH AWX`
+
+![image](https://user-images.githubusercontent.com/16169323/162826951-1bc339e7-60de-4045-9b60-af792fb747f1.png)
+
+
+
+
+
+
+
 
 
 

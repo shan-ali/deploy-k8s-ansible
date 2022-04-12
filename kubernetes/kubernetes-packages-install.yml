@@ -1,0 +1,102 @@
+---
+- name: kubernetes-packages-install
+  hosts: all 
+
+  tasks:
+
+  - name: install docker required packages
+    become: yes
+    apt:
+      name: "{{item}}"
+      state: latest
+      update_cache: yes 
+    loop:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+  
+  - name: add docker official gpg key
+    become: yes
+    apt_key:
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: set the stable docker repository
+    become: yes
+    apt_repository: 
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
+      state: present
+      update_cache: yes
+
+  - name: install docker
+    become: yes
+    apt:
+      name: "{{item}}"
+      update_cache: yes 
+      state: latest
+    loop:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+  
+  - name: set cgroup to systemd for docker
+    become: yes
+    copy:
+      dest: "/etc/docker/daemon.json"
+      content: |
+        {
+          "exec-opts": ["native.cgroupdriver=systemd"]
+        }
+
+  - name: restart docker service
+    become: yes
+    service:
+      name: docker
+      state: restarted
+      enabled: yes
+  
+  - name: let iptable see bridged traffic
+    become: yes
+    shell: sudo sysctl --system
+
+  - name: add kubernetes official gpg key
+    become: yes
+    apt_key:
+      url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+      state: present
+
+  - name: set the stable kubernetes repository
+    become: yes
+    apt_repository: 
+      repo: "deb [arch=amd64] https://apt.kubernetes.io/ kubernetes-xenial main"
+      state: present
+      update_cache: yes
+
+  - name: install kubernetes
+    become: yes
+    apt:
+      name: "{{item}}"
+      update_cache: yes 
+      state: latest
+    loop:
+      - kubelet
+      - kubeadm
+      - kubectl
+
+  - name: ensure br_netfilter is set in k8s.conf
+    become: yes
+    copy:
+      dest: "/etc/modules-load.d/k8s.conf"
+      content: |
+        br_netfilter
+
+  - name: ensure net.bridge.bridge-nf-call-iptables is set to 1 in sysctl config
+    become: yes
+    copy:
+      dest: "/etc/sysctl.d/k8s.conf"
+      content: |
+        net.bridge.bridge-nf-call-ip6tables = 1
+        net.bridge.bridge-nf-call-iptables = 1
+

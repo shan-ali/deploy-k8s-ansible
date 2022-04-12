@@ -1,8 +1,11 @@
 ---
-- name: Hello World
+- name: kubernetes-packages-install
   hosts: all 
 
   tasks: 
+  
+  - name: Hello World
+    shell: echo hello world
 
-  - name: print from vm
-    shell: echo hello
+  
+

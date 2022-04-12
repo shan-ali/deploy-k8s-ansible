@@ -7,19 +7,16 @@
   - name: multipass list (before)
     win_shell: multipass list
 
-  - name: multipass clean 
+  - name: multipass clean
     win_shell: |
       multipass delete controller worker
       multipass purge
 
   - name: multipass start controller
-    win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name controller
+    win_shell: multipass launch --disk 5G --mem 1G --cpus 1 --name controller
 
-  - name: multipass start controller
-    win_shell: multipass launch --disk 5G --mem 512M --cpus 1 --name worker
-
-  - name: multipass list (after)
-    win_shell: multipass list
+  - name: multipass start worker
+    win_shell: multipass launch --disk 5G --mem 1G --cpus 1 --name worker
 
   - name: Create a directory if it does not exist
     win_shell: |
@@ -51,4 +48,7 @@
   - name: restart VMs to apply netplan changes
     win_shell: |
       multipass restart controller worker
+
+  - name: multipass list (after)
+    win_shell: multipass list
 
