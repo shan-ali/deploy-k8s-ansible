@@ -4,17 +4,15 @@
 
   tasks: 
 
-  - name: Install Standard Packages
+  - tasks:
+  - name: update apt list
     apt:
-      name: curl
-      state: latest
       update_cache: yes
 
-  - name: Install Standard Packages
+  - name: install docker required packages
     apt:
       name: "{{item}}"
       state: latest
-      update_cache: yes
     loop:
       - apt-transport-https
       - ca-certificates
@@ -22,23 +20,22 @@
       - gnupg
       - lsb-release
   
-  - name: Add Docker’s official GPG key
+  - name: add docker official gpg key
     apt_key:
       url: https://download.docker.com/linux/ubuntu/gpg
       state: present
 
 
-  - name: Install Docker
+  - name: install docker
     apt:
       name: "{{item}}"
       state: latest
-      update_cache: yes
     loop:
       - docker-ce=20.10.12
       - docker-ce-cli=20.10.12
       - containerd.io=20.10.12
   
-  - name: Set cgroup to systemd for Docker
+  - name: set cgroup to systemd for docker
     copy:
       dest: "/etc/docker/daemon.json"
       content: |
@@ -46,7 +43,7 @@
           "exec-opts": ["native.cgroupdriver=systemd"]
         }
   
-  - name: Let iptable see Bridged Traffic
+  - name: let iptable see bridged traffic
     shell: sudo sysctl --system
 
   
