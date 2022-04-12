@@ -53,6 +53,7 @@
       - containerd.io
   
   - name: set cgroup to systemd for docker
+    become: yes
     copy:
       dest: "/etc/docker/daemon.json"
       content: |
@@ -61,6 +62,7 @@
         }
   
   - name: let iptable see bridged traffic
+    become: yes
     shell: sudo sysctl --system
 
   
