@@ -35,6 +35,7 @@
       state: present
 
   - name: Set the stable docker repository
+    become: yes
     apt_repository: 
       repo: "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
       state: present
