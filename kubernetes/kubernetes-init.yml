@@ -22,6 +22,13 @@
     become: yes
     shell: kubeadm init --upload-certs --pod-network-cidr "10.142.0.0/24" --ignore-preflight-errors=NumCPU,Mem
 
+  - name: create new join token and get command
+    shell: "kubeadm token create --print-join-command"
+    register: kubeadm_token_create
+
+  - set_fact:
+      kubeadm_join_cmd: "{{ kubeadm_token_create.stdout }}"
+
   - name: create .kube directory for ubuntu user
     file:
       path: $HOME/.kube
@@ -71,4 +78,7 @@
     file:
       state: absent
       path: $HOME/.kube
+
+  - name: join cluster
+    shell: sudo {{ kubeadm_token_create.stdout }} --ignore-preflight-errors=NumCPU,Mem
 
