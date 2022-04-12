@@ -34,7 +34,7 @@
       url: https://download.docker.com/linux/ubuntu/gpg
       state: present
 
-  - name: Set the stable docker repository
+  - name: set the stable docker repository
     become: yes
     apt_repository: 
       repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
@@ -46,10 +46,11 @@
     apt:
       name: "{{item}}"
       update_cache: yes 
+      latest: stable
     loop:
-      - docker-ce=20.10.12
-      - docker-ce-cli=20.10.12
-      - containerd.io=20.10.12
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
   
   - name: set cgroup to systemd for docker
     copy:
