@@ -41,9 +41,9 @@
       name: "{{item}}"
       update_cache: yes 
     loop:
-      - docker-ce=20.10.14
-      - docker-ce-cli=20.10.14
-      - containerd.io=20.10.14
+      - docker-ce=20.10.12
+      - docker-ce-cli=20.10.12
+      - containerd.io=20.10.12
   
   - name: set cgroup to systemd for docker
     copy:
