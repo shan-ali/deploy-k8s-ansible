@@ -37,9 +37,9 @@
   - name: Set the stable docker repository
     become: yes
     apt_repository: 
-      repo: "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+      repo: "deb [arch=amd64] https://download.docker.com/linux/ubuntu focal stable"
       state: present
-      update_cache: yes 
+      update_cache: yes
 
   - name: install docker
     become: yes
