@@ -11,6 +11,11 @@
     file:
       state: absent
       path: /etc/cni/net.d
+  
+  - name: delete kube config dir
+    file:
+      state: absent
+      path: $HOME/.kube
 
   - name: kubeamd init
     become: yes
@@ -21,7 +26,7 @@
       path: $HOME/.kube
       state: directory
 
-  - name: Copy file with owner and permissions
+  - name: copy admin.conf to .kube directory for ubuntu user
     become: yes
     copy:
       src: /etc/kubernetes/admin.conf
@@ -29,19 +34,6 @@
       dest: /home/ubuntu/.kube/config
       owner: ubuntu
       group: ubuntu
-
-  # - name: set kubeconfig for ubuntu user
-  #   shell: | 
-  #     mkdir -p $HOME/.kube
-  #     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-  #     sudo chown $(id -u):$(id -g) $HOME/.kube/config
-
-  # - name: set kubeconfig for root user
-  #   become: yes
-  #   shell: | 
-  #     mkdir -p /home/root/.kube
-  #     sudo cp -i /etc/kubernetes/admin.conf /home/root/.kube/config
-  #     sudo chown $(id -u):$(id -g) /home/root/.kube/.kube/config
   
   - name: get calico cni yaml
     get_url:
@@ -58,3 +50,24 @@
 
   - name: view nodes (STATUS should be Ready)
     shell: kubectl get nodes
+
+
+- hosts: worker
+  gather_facts: yes  
+  tasks:
+
+  - name: kubeadm reset existing cluster
+    become: yes
+    shell: kubeadm reset --force
+
+  - name: delete cni configuration in /etc/cni/net.d
+    file:
+      state: absent
+      path: /etc/cni/net.d
+  
+  - name: delete kube config dir
+    file:
+      state: absent
+      path: $HOME/.kube
+
+  
