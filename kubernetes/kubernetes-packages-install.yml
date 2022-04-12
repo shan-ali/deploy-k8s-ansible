@@ -9,7 +9,6 @@
       name: curl
       state: latest
       update_cache: yes
-      become: yes
 
   - name: Install Standard Packages
     apt:

@@ -117,7 +117,7 @@ Expose Kubernetes port for external accesss
 ```
 kubectl port-forward --address 0.0.0.0 service/awx-service 8080:80 -n awx &> /dev/null &
 ```
-You can now access the AWX webpage by going to `<multipass-awx-vm-ip-address>:8080`
+You can now access the AWX webpage by going to `<multipass-awx-vm-ip-address>:8080` or `http://awx.mshome.net:8080/`
 
 >Note: you can find your ip address with `multipass list`
 
