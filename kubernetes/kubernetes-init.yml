@@ -1,0 +1,9 @@
+
+- hosts: controller
+  gather_facts: yes
+  become: yes
+  name: kubeadm init controller
+  command: kubeadm init \
+    --upload-certs\
+    --pod-network-cidr "10.142.0.0/24"\
+    --ignore-preflight-errors=NumCPU,Mem
