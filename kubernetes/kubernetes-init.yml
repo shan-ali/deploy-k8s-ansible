@@ -22,6 +22,25 @@
       sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
       sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-  - name: set kubeconfig for root
+  - name: set kubeconfig for root user
     become: yes
-    shell: export KUBECONFIG=/etc/kubernetes/admin.conf
+    shell: | 
+      mkdir -p /home/root/.kube
+      sudo cp -i /etc/kubernetes/admin.conf /home/root/.kube/config
+      sudo chown $(id -u):$(id -g) /home/root/.kube/.kube/config
+  
+  - name: get calico cni yaml
+    get_url:
+      url: https://projectcalico.docs.tigera.io/manifests/calico.yaml
+      dest: /$HOME/calico.yaml
+  
+  - name: deploy calico cni
+    shell: kubectl apply -f calico.yaml
+
+  - name: sleep for 30 seconds
+    wait_for:
+      timeout: 30
+    delegate_to: localhost
+
+  - name: view nodes (STATUS should be Ready)
+    shell: kubectl get nodes
