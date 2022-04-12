@@ -265,8 +265,15 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job. If everything is successful, your VMs will now have Docker and Kuberenetes installed. 
 
+## Initialize the Kubernetes Cluster
 
+Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
 
+  1. Name is `K8s Init` 
+  2. Inventory is `K8s Cluster`
+  4. Project is `K8s Cluster`
+  5. Playbook is [kubernetes/kubernetes-init.yml](kubernetes/kubernetes-init.yml). This playbook: 
+  7. Credentials are `SSH AWX`
 
 
 
