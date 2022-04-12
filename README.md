@@ -10,6 +10,9 @@ Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 
 - [AWX](https://github.com/ansible/awx/)
 - [minikube](https://minikube.sigs.k8s.io/docs/start/)
+- [Docker](https://docs.docker.com/)
+- [Kubernetes](https://kubernetes.io/docs/home/)
+- [Ansible](https://docs.ansible.com/ansible/latest/index.html)
 
 ## Multipass Setup
 
