@@ -11,8 +11,10 @@
       mode: 0755
 
   - name: update apt list
+    become: yes
     apt:
       update_cache: yes
+    
 
   - name: install docker required packages
     apt:
