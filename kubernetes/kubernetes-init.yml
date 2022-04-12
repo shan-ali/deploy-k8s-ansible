@@ -43,6 +43,9 @@
   - set_fact:
       kubeadm_join_cmd: "{{ kubeadm_token_create.stdout }}"
   
+  - debug: 
+      var: kubeadm_join_cmd
+  
   - name: get calico cni yaml
     get_url:
       url: https://projectcalico.docs.tigera.io/manifests/calico.yaml
