@@ -16,18 +16,30 @@
     become: yes
     shell: kubeadm init --upload-certs --pod-network-cidr "10.142.0.0/24" --ignore-preflight-errors=NumCPU,Mem
 
-  - name: set kubeconfig for ubuntu user
-    shell: | 
-      mkdir -p $HOME/.kube
-      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
-      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  - name: create .kube directory for ubuntu user
+    file:
+      path: $HOME/.kube
+      state: directory
 
-  - name: set kubeconfig for root user
-    become: yes
-    shell: | 
-      mkdir -p /home/root/.kube
-      sudo cp -i /etc/kubernetes/admin.conf /home/root/.kube/config
-      sudo chown $(id -u):$(id -g) /home/root/.kube/.kube/config
+  - name: Copy file with owner and permissions
+    copy:
+      src: /etc/kubernetes/admin.conf
+      dest: $HOME/.kube/config
+      owner: ubuntu
+      group: ubuntu
+
+  # - name: set kubeconfig for ubuntu user
+  #   shell: | 
+  #     mkdir -p $HOME/.kube
+  #     sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+  #     sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+  # - name: set kubeconfig for root user
+  #   become: yes
+  #   shell: | 
+  #     mkdir -p /home/root/.kube
+  #     sudo cp -i /etc/kubernetes/admin.conf /home/root/.kube/config
+  #     sudo chown $(id -u):$(id -g) /home/root/.kube/.kube/config
   
   - name: get calico cni yaml
     get_url:
