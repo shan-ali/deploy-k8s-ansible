@@ -46,7 +46,7 @@
     apt:
       name: "{{item}}"
       update_cache: yes 
-      latest: stable
+      state: latest
     loop:
       - docker-ce
       - docker-ce-cli
