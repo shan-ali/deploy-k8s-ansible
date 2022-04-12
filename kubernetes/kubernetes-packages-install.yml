@@ -16,15 +16,6 @@
       - curl
       - gnupg
       - lsb-release
-
-  - name: set cgroup to systemd for docker
-    become: yes
-    copy:
-      dest: "/etc/docker/daemon.json"
-      content: |
-        {
-          "exec-opts": ["native.cgroupdriver=systemd"]
-        }
   
   - name: add docker official gpg key
     become: yes
@@ -49,6 +40,21 @@
       - docker-ce
       - docker-ce-cli
       - containerd.io
+  
+  - name: set cgroup to systemd for docker
+    become: yes
+    copy:
+      dest: "/etc/docker/daemon.json"
+      content: |
+        {
+          "exec-opts": ["native.cgroupdriver=systemd"]
+        }
+
+  - name: restart docker service
+    service:
+      name: docker
+      state: restarted
+      enabled: yes
   
   - name: let iptable see bridged traffic
     become: yes
