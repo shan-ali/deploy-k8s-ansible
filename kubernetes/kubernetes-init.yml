@@ -51,9 +51,9 @@
   - name: deploy calico cni
     shell: kubectl apply -f calico.yaml
 
-  - name: sleep for 30 seconds
+  - name: sleep for 15 seconds
     wait_for:
-      timeout: 30
+      timeout: 15
     delegate_to: localhost
 
   - name: view nodes (STATUS should be Ready)
@@ -80,5 +80,13 @@
       path: $HOME/.kube
 
   - name: join cluster
-    shell: sudo {{ kubeadm_token_create.stdout }} --ignore-preflight-errors=NumCPU,Mem
+    shell: sudo {{ kubeadm_join_cmd }} --ignore-preflight-errors=NumCPU,Mem
+
+  - name: sleep for 15 seconds
+    wait_for:
+      timeout: 15
+    delegate_to: localhost
+  
+  - name: view nodes (STATUS should be Ready)
+    shell: kubectl get nodes
 
