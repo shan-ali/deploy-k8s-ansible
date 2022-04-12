@@ -3,6 +3,15 @@
   gather_facts: yes  
   tasks:
 
+  - name: kubeadm reset existing cluster
+    become: yes
+    shell: kubeadm reset --force
+
+  - name: delete cni configuration in /etc/cni/net.d
+    file:
+    state: absent
+    path: /etc/cni/net.d
+
   - name: kubeamd init
     become: yes
     shell: kubeadm init --upload-certs --pod-network-cidr "10.142.0.0/24" --ignore-preflight-errors=NumCPU,Mem
