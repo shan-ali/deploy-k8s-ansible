@@ -256,10 +256,15 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
   1. Name is `K8s Package Install` 
   2. Inventory is `K8s Cluster`
   4. Project is `K8s Cluster`
-  5. Playbook is [kubernetes/kubernetes-packages-install.yml](kubernetes/kubernetes-packages-install.yml)
-  6. Credentials are `SSH AWX`
+  5. Playbook is [kubernetes/kubernetes-packages-install.yml](kubernetes/kubernetes-packages-install.yml). This playbook: 
+     - Installs Docker (docker-ce, docker-ce-cli, containerd.io) and required packages and sets configurations
+     - Installs Kubernetes (kubelet, kubeadmn, kubectl) and sets configurations  
+  7. Credentials are `SSH AWX`
 
 ![image](https://user-images.githubusercontent.com/16169323/162826951-1bc339e7-60de-4045-9b60-af792fb747f1.png)
+
+Launch the job. If everything is successful, your VMs will now have Docker and Kuberenetes installed. 
+
 
 
 
