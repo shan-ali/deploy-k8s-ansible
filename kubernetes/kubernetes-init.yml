@@ -1,7 +1,18 @@
 
 - hosts: controller
-  gather_facts: yes
-  become: yes
-  name: kubeadm init controller
+  gather_facts: yes  
   tasks:
-  - shell: kubeadm init --upload-certs --pod-network-cidr "10.142.0.0/24" --ignore-preflight-errors=NumCPU,Mem
+
+  - name: kubeamd init
+    become: yes
+    shell: kubeadm init --upload-certs --pod-network-cidr "10.142.0.0/24" --ignore-preflight-errors=NumCPU,Mem
+
+  - name: set kubeconfig for ubuntu user
+    shell: | 
+      mkdir -p $HOME/.kube
+      sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+      sudo chown $(id -u):$(id -g) $HOME/.kube/config
+
+  - name: set kubeconfig for root
+    become: yes
+    shell: export KUBECONFIG=/etc/kubernetes/admin.conf
