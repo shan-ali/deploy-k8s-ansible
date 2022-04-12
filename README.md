@@ -145,11 +145,11 @@ If you have done the above step of configuring your Windows host as an Ansible n
 
 Once you have successfully completed this, continue from [Install Packages](#install-packages)
 
-## Provision VMs
+## Provision Kubernetes VMs
 
-Change directory to `multipass`
+Change directory to `kubernetes/multipass`
 ```
-cd multipass
+cd kubernetes/multipass
 ```
 
 Launch VMs
@@ -172,9 +172,9 @@ Restart VMs to apply netplan changes
 multipass restart controller worker
 ```
 
-Leave the multipass directory
+Leave the directory
 ```
-cd ..
+cd ../..
 ```
 ## Add New VMs to AWX
 
