@@ -1,6 +1,15 @@
 
-- hosts: controller
+- hosts: all
   gather_facts: yes  
+  vars:
+    pod_network_cidr: "10.142.0.0/24"
+    ignore_preflight: "--ignore-preflight-errors=NumCPU,Mem"
+    ubuntu_home: "/home/ubuntu"
+    cni_yaml_url: "https://projectcalico.docs.tigera.io/manifests/calico.yaml"
+    cni_yaml: "calico.yaml"
+
+- hosts: controller
+  gather_facts: yes
   tasks:
 
   - name: kubeadm reset existing cluster
@@ -16,15 +25,15 @@
   - name: delete kube config dir
     file:
       state: absent
-      path: $HOME/.kube
+      path: "{{ ubuntu_home }}/.kube"
 
   - name: kubeamd init
     become: yes
-    shell: kubeadm init --upload-certs --pod-network-cidr "10.142.0.0/24" --ignore-preflight-errors=NumCPU,Mem
+    shell: kubeadm init --upload-certs --pod-network-cidr "{{ pod_network_cidr }}" {{ ignore_preflight }}
 
   - name: create .kube directory for ubuntu user
     file:
-      path: $HOME/.kube
+      path: "{{ ubuntu_home }}/.kube"
       state: directory
 
   - name: copy admin.conf to .kube directory for ubuntu user
@@ -32,7 +41,7 @@
     copy:
       src: /etc/kubernetes/admin.conf
       remote_src: yes
-      dest: /home/ubuntu/.kube/config
+      dest: "{{ ubuntu_home }}/.kube/config"
       owner: ubuntu
       group: ubuntu
 
@@ -41,18 +50,15 @@
     register: kubeadm_token_create
 
   - set_fact:
-      kubeadm_join_cmd: "{{ kubeadm_token_create.stdout }}"
-  
-  - debug: 
-      var: kubeadm_join_cmd
-  
+      kubeadm_join_cmd: "{{ kubeadm_token_create.stdout }}"  
+ 
   - name: get calico cni yaml
     get_url:
-      url: https://projectcalico.docs.tigera.io/manifests/calico.yaml
-      dest: /$HOME/calico.yaml
+      url: "{{ cni_yaml_url }}"
+      dest: "{{ ubuntu_home }}/{{ cni_yaml }}"
   
   - name: deploy calico cni
-    shell: kubectl apply -f calico.yaml
+    shell: kubectl apply -f {{ cni_yaml }}
 
   - name: sleep for 30 seconds
     wait_for:
@@ -80,13 +86,10 @@
   - name: delete kube config dir
     file:
       state: absent
-      path: $HOME/.kube
-  
-  - debug: 
-      var: hostvars['controller'].kubeadm_join_cmd
+      path: "{{ ubuntu_home }}/.kube"
 
   - name: join cluster
-    shell: sudo {{ hostvars['controller'].kubeadm_join_cmd }} --ignore-preflight-errors=NumCPU,Mem
+    shell: sudo {{ hostvars['controller'].kubeadm_join_cmd }} {{ ignore_preflight }}
 
   - name: sleep for 30 seconds
     wait_for:
