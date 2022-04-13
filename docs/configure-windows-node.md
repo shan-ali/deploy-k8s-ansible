@@ -30,15 +30,15 @@ powershell.exe -ExecutionPolicy ByPass -File $file
 
 ## Add Windows Host to AWX
 
-Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `Windows Local`
+Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `windows-local`
 
-![image](https://user-images.githubusercontent.com/16169323/162064083-0a524e50-1699-4584-97b0-2bdea94c7cac.png)
+![image](https://user-images.githubusercontent.com/16169323/163241541-9feea6a4-8af7-4318-ac6c-a8a2305f8c5a.png)
 
 Create a new `Host` using your Window's Host's IP address. You will need to add the [basic authentication](https://docs.ansible.com/ansible/latest/user_guide/windows_winrm.html#basic) varibles using your newly created ansible user. 
 
 >Note: credential for ansible user will be added later on as an object in AWX
 
-![image](https://user-images.githubusercontent.com/16169323/162782967-3372148f-ca4e-4a2b-851d-3167365db1ef.png)
+![image](https://user-images.githubusercontent.com/16169323/163241693-bf57fc42-11ae-4ba4-b513-50a7216d757e.png)
 
 ```
 ansible_connection: winrm
@@ -48,21 +48,27 @@ ansible_winrm_server_cert_validation: ignore
 
 ## Add Windows Ansible User Credentials
 
-Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `Windows Ansible User`. 
+Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `windows-ansible-user`. 
 
-Any [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) that will run on your Windows local will need to use these credential.s
+Any [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) that will run on your Windows local will need to use these credentials
 
-![image](https://user-images.githubusercontent.com/16169323/162782640-ebccbaf4-69b3-4a95-b857-18a3f2e3f98e.png)
+![image](https://user-images.githubusercontent.com/16169323/163241990-8429dcca-26a0-4720-a5aa-5bbd560409e0.png)
 
 ## Test Windows Host (Optional)
 
-Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `Windows Test`. This project will use this git repository as its source
+Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `windows-test`. This project will use this git repository as its source
 
-![image](https://user-images.githubusercontent.com/16169323/163008644-1fd64ea9-cf8b-4751-8128-94c3f00080fa.png)
+![image](https://user-images.githubusercontent.com/16169323/163242119-2b8b350f-1c84-41c2-8b93-70feb706cf0b.png)
 
-Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) named `Hello World Windows` that is in the project `Windows Test`. You will use the Playbook `windows/helloworld.yml`. 
+Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
 
-![image](https://user-images.githubusercontent.com/16169323/163008811-25ebfa81-e177-4560-9ac0-cebd68bf3673.png)
+  1. Name is `hello-world-windows` 
+  2. Inventory is `windows-local`
+  4. Project is `windows-test`
+  5. Playbook is [ansible/helloworld_win.yml](ansible/helloworld_win.yml). This playbook: 
+  7. Credentials are `windows-ansible-user`
+
+![image](https://user-images.githubusercontent.com/16169323/163242385-7ce014c5-8ef4-434e-9936-4290a17dbb4d.png)
 
 Launch the job
 
