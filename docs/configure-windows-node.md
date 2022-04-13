@@ -52,7 +52,7 @@ Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/qui
 
 Any [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) that will run on your Windows local will need to use these credentials
 
-![image](https://user-images.githubusercontent.com/16169323/163241990-8429dcca-26a0-4720-a5aa-5bbd560409e0.png)
+![image](https://user-images.githubusercontent.com/16169323/163242648-618c643c-a85d-4646-b49d-5d6909ff7964.png)
 
 ## Test Windows Host (Optional)
 
@@ -72,7 +72,7 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job
 
-![image](https://user-images.githubusercontent.com/16169323/162069552-a6d32138-9d14-476c-a627-05633bf6ddd9.png)
+![Uploading image.png…]()
 
 
 
