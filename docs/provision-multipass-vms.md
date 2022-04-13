@@ -17,7 +17,7 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
   1. Name is `provision-vms` 
   2. Inventory is `windows-local`
   4. Project is `kubernetes-cluster`
-  5. Playbook is [ansible/provision-vms.yml](ansible/provision-vms.yml)
+  5. Playbook is [/ansible/provision-vms.yml](/ansible/provision-vms.yml)
   6. Credentials are `windows-ansible-user`
 
 ![image](https://user-images.githubusercontent.com/16169323/163248360-6cf955a7-ec40-4f43-a2d7-ab990aa87f38.png)
