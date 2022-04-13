@@ -146,7 +146,7 @@ The steps to add your Windows machine as a node can be found here: [configure-wi
 
 If you have done the above step of configuring your Windows host as an Ansible node you can now provision your K8s Multipass VMs following the the steps in [provision-multipass-vms.md](docs/provision-multipass-vms.md). Otherwise skip to the [Provision VMs](#provision-vms) section. 
 
-Once you have successfully completed this, continue from [Install Packages](#install-packages)
+Once you have successfully completed this, continue from [Add New VMs to AWX](#add-new-vms-to-awx)
 
 ## Provision Kubernetes VMs
 
