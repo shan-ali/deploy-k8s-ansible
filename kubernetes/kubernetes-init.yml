@@ -86,7 +86,7 @@
       var: kubeadm_join_cmd
 
   - name: join cluster
-    shell: sudo {{ kubeadm_join_cmd }} --ignore-preflight-errors=NumCPU,Mem
+    shell: sudo {{ hostvars['master'].kubeadm_join_cmd }} --ignore-preflight-errors=NumCPU,Mem
 
   - name: sleep for 15 seconds
     wait_for:
