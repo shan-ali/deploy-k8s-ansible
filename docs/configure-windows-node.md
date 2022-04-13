@@ -65,7 +65,7 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
   1. Name is `hello-world-windows` 
   2. Inventory is `windows-local`
   4. Project is `windows-test`
-  5. Playbook is [ansible/helloworld_win.yml](ansible/helloworld_win.yml). This playbook: 
+  5. Playbook is [/ansible/helloworld_win.yml](/ansible/helloworld_win.yml). This playbook: 
   7. Credentials are `windows-ansible-user`
 
 ![image](https://user-images.githubusercontent.com/16169323/163242385-7ce014c5-8ef4-434e-9936-4290a17dbb4d.png)
