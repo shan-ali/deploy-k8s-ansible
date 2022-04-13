@@ -370,8 +370,7 @@ PORT_NUMBER=$(kubectl get svc -l app=nginx -o jsonpath="{.items[0].spec.ports[0]
 Test to view NGINX page
 
 ```
-curl http://worker-1:$PORT_NUMBER
-curl http://worker-2:$PORT_NUMBER
+curl http://worker:$PORT_NUMBER
 ```
 
 > output
@@ -400,6 +399,12 @@ Commercial support is available at
 <p><em>Thank you for using nginx.</em></p>
 </body>
 </html>
+```
+
+### Clean Up
+
+```
+kubectl delete deployment nginx --force
 ```
 
 
