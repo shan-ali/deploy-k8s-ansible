@@ -1,5 +1,5 @@
 
-- hosts: all
+- hosts: controller
   gather_facts: yes  
   vars:
     pod_network_cidr: "10.142.0.0/24"
@@ -8,8 +8,6 @@
     cni_yaml_url: "https://projectcalico.docs.tigera.io/manifests/calico.yaml"
     cni_yaml: "calico.yaml"
 
-- hosts: controller
-  gather_facts: yes
   tasks:
 
   - name: kubeadm reset existing cluster
@@ -70,7 +68,10 @@
 
 
 - hosts: worker
-  gather_facts: yes  
+  gather_facts: yes 
+  vars:
+    ignore_preflight: "--ignore-preflight-errors=NumCPU,Mem"
+    ubuntu_home: "/home/ubuntu" 
   tasks:
 
   - name: kubeadm reset existing cluster
