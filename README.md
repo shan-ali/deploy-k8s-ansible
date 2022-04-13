@@ -204,11 +204,11 @@ cd ../..
 ```
 ## Add New VMs to AWX
 
-Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `K8s Cluster`
+Create a new [Inventory](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_inventory.html) named `kubernetes-cluster`
 
-Add our `controller` and `worker` VMs as Host(s) to AWX. Make sure they are part of the `K8s Cluster` Inventory. 
+Add our `controller` and `worker` VMs as Host(s) to AWX. Make sure they are part of the `kubernetes-cluster` Inventory. 
 
-![image](https://user-images.githubusercontent.com/16169323/162816434-57f54a41-2ad9-4b94-8cb2-947782f8ac38.png)
+![image](https://user-images.githubusercontent.com/16169323/163254955-0f275d61-3ed3-4b20-81d3-c535b4002118.png)
 
 >Note: we can use the name of the VM or the IP address
 
@@ -266,37 +266,48 @@ Copy the output of the private key file
 cat /home/ubuntu/.ssh/id_rsa
 ```
 
-Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `SSH AWX` with user `ubuntu`. Paste the content of your private key in the `SSH Private Key` section.
+Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_credential.html) named `ssh-awx` with user `ubuntu`. Paste the content of your private key in the `SSH Private Key` section.
 
-![image](https://user-images.githubusercontent.com/16169323/162825145-a1f673a7-501f-42ca-b080-b668561ad4e5.png)
+![image](https://user-images.githubusercontent.com/16169323/163255423-94a07527-ce33-481d-b9fa-c87c7f8042e6.png)
 
 ## Install Packages
 
-Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `K8s Cluster` if you have not already. This project will use this git repository as its source.
+Create a new [Project](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_project.html) named `kubernetes-cluster` if you have not already. This project will use this git repository as its source.
 
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
 
-  1. Name is `K8s Package Install` 
-  2. Inventory is `K8s Cluster`
-  4. Project is `K8s Cluster`
+  1. Name is `package-install` 
+  2. Inventory is `kubernetes-cluster`
+  4. Project is `kubernetes-cluster`
   5. Playbook is [kubernetes/kubernetes-packages-install.yml](kubernetes/kubernetes-packages-install.yml). This playbook: 
      - Installs Docker (docker-ce, docker-ce-cli, containerd.io) and required packages and sets configurations
      - Installs Kubernetes (kubelet, kubeadmn, kubectl) and sets configurations  
-  7. Credentials are `SSH AWX`
+  7. Credentials are `ssh-awx`
 
-![image](https://user-images.githubusercontent.com/16169323/162826951-1bc339e7-60de-4045-9b60-af792fb747f1.png)
+![image](https://user-images.githubusercontent.com/16169323/163255763-f2928f92-8114-4495-8b23-134b9ad13858.png)
 
 Launch the job. If everything is successful, your VMs will now have Docker and Kuberenetes installed. 
+
+![image](https://user-images.githubusercontent.com/16169323/163256117-695b9260-cefd-4882-b377-f62de775d951.png)
+
 
 ## Initialize the Kubernetes Cluster
 
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
 
-  1. Name is `K8s Init` 
-  2. Inventory is `K8s Cluster`
-  4. Project is `K8s Cluster`
-  5. Playbook is [kubernetes/kubernetes-init.yml](kubernetes/kubernetes-init.yml). This playbook: 
-  7. Credentials are `SSH AWX`
+  1. Name is `kubernetes-init` 
+  2. Inventory is `kubernetes-cluster`
+  4. Project is `kubernetes-cluster`
+  5. Playbook is [/ansible/kubernetes-init.yml](/ansible/kubernetes-init.yml). This playbook: 
+     - runs `kubeadm reset` to clean up any existing cluster & cleans existing kube config
+     - runs `kubeadm init` on `controller` & sets up kube config for ubuntu user
+     - installs calico cni for pod networking
+     - runs `kubeadm join` on `worker`
+  7. Credentials are `ssh-awx`
+
+![image](https://user-images.githubusercontent.com/16169323/163256638-9d46e917-d17f-45d9-bda8-dec0eaa8e8ed.png)
+
+Launch the job. If everything is successful, you will now have a kubernetes cluster with one control plane and one worker node!
 
 
 
