@@ -288,9 +288,6 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job. If everything is successful, your VMs will now have Docker and Kuberenetes installed. 
 
-![image](https://user-images.githubusercontent.com/16169323/163256117-695b9260-cefd-4882-b377-f62de775d951.png)
-
-
 ## Initialize the Kubernetes Cluster
 
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
