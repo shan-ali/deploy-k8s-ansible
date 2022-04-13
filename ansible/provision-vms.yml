@@ -31,12 +31,12 @@
 
   - name: copy network netplan for controller
     ansible.builtin.copy:
-      src: 01-controller-network.yaml      
+      src: ../multipass/network/01-controller-network.yaml      
       dest: ./multipass-provision-vms/01-controller-network.yaml
 
   - name: copy network netplan for worker
     ansible.builtin.copy:
-      src: 01-worker-network.yaml
+      src: ../multipass/network/01-worker-network.yaml
       dest: ./multipass-provision-vms/01-worker-network.yaml
   
   - name: move network netplan to VMs and copy to /etc/netplan/
