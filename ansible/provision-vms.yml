@@ -9,7 +9,8 @@
 
   - name: multipass clean
     win_shell: |
-      multipass delete controller worker
+      multipass delete controller
+      multipass delete worker
       multipass purge
 
   - name: multipass start controller
@@ -30,7 +31,7 @@
 
   - name: copy network netplan for controller
     ansible.builtin.copy:
-      src: 01-controller-network.yaml
+      src: 01-controller-network.yaml      
       dest: ./multipass-provision-vms/01-controller-network.yaml
 
   - name: copy network netplan for worker
