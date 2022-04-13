@@ -288,6 +288,8 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job. If everything is successful, your VMs will now have Docker and Kuberenetes installed. 
 
+![image](https://user-images.githubusercontent.com/16169323/163260704-1ab5d9f5-e764-4297-8348-f438d747b780.png)
+
 ## Initialize the Kubernetes Cluster
 
 Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) with the following:
@@ -306,6 +308,9 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job. If everything is successful, you will now have a kubernetes cluster with one control plane and one worker node!
 
+![image](https://user-images.githubusercontent.com/16169323/163260608-02ade009-3a2c-483b-93f5-e054cfbe7040.png)
+
+
 ## Verify Cluster
 
 on `controller` vm
@@ -321,6 +326,8 @@ worker       Ready    <none>                 5m18s   v1.23.5
 ```
 
 ## Smoke Test
+
+on `controller` vm
 
 ### Deployments Test
 
