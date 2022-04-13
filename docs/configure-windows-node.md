@@ -38,7 +38,7 @@ Create a new `Host` using your Window's Host's IP address. You will need to add 
 
 >Note: credential for ansible user will be added later on as an object in AWX
 
-![image](https://user-images.githubusercontent.com/16169323/163241693-bf57fc42-11ae-4ba4-b513-50a7216d757e.png)
+![image](https://user-images.githubusercontent.com/16169323/163242860-d6057163-b047-4325-9ffa-aec66e886a50.png)
 
 ```
 ansible_connection: winrm
@@ -52,7 +52,7 @@ Create a new [Credential](https://docs.ansible.com/ansible-tower/latest/html/qui
 
 Any [Job Template](https://docs.ansible.com/ansible-tower/latest/html/quickstart/create_job.html) that will run on your Windows local will need to use these credentials
 
-![image](https://user-images.githubusercontent.com/16169323/163242648-618c643c-a85d-4646-b49d-5d6909ff7964.png)
+![image](https://user-images.githubusercontent.com/16169323/163242961-97740d1e-a688-438e-885e-cf7e70a04b80.png)
 
 ## Test Windows Host (Optional)
 
@@ -72,7 +72,8 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job
 
-![Uploading image.png…]()
+![image](https://user-images.githubusercontent.com/16169323/163243049-50288a78-5ad1-4390-b604-12f835b6bcfd.png)
+
 
 
 
