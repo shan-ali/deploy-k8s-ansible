@@ -306,8 +306,94 @@ Create a new [Job Template](https://docs.ansible.com/ansible-tower/latest/html/q
 
 Launch the job. If everything is successful, you will now have a kubernetes cluster with one control plane and one worker node!
 
+## Verify Cluster
+
+on `controller` vm
+
+```
+kubectl get nodes
+```
+>output
+```
+NAME         STATUS   ROLES                  AGE     VERSION
+controller   Ready    control-plane,master   6m11s   v1.23.5
+worker       Ready    <none>                 5m18s   v1.23.5
+```
+
+## Smoke Test
+
+### Deployments Test
+
+In this section you will verify the ability to create and manage [Deployments](https://kubernetes.io/docs/concepts/workloads/controllers/deployment/).
+
+Create a deployment for the [nginx](https://nginx.org/en/) web server:
+
+```
+kubectl create deployment nginx --image=nginx
+```
+
+List the pod created by the `nginx` deployment:
+
+```
+kubectl get pods -l app=nginx
+```
+
+> output
+
+```
+NAME                    READY   STATUS    RESTARTS   AGE
+nginx-dbddb74b8-6lxg2   1/1     Running   0          10s
+```
+
+### Services Test
+
+In this section you will verify the ability to access applications remotely using [port forwarding](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/).
+
+Create a service to expose deployment nginx on node ports.
+
+```
+kubectl expose deploy nginx --type=NodePort --port 80
+```
 
 
+```
+PORT_NUMBER=$(kubectl get svc -l app=nginx -o jsonpath="{.items[0].spec.ports[0].nodePort}")
+```
+
+Test to view NGINX page
+
+```
+curl http://worker-1:$PORT_NUMBER
+curl http://worker-2:$PORT_NUMBER
+```
+
+> output
+
+```
+<!DOCTYPE html>
+<html>
+<head>
+<title>Welcome to nginx!</title>
+<style>
+html { color-scheme: light dark; }
+body { width: 35em; margin: 0 auto;
+font-family: Tahoma, Verdana, Arial, sans-serif; }
+</style>
+</head>
+<body>
+<h1>Welcome to nginx!</h1>
+<p>If you see this page, the nginx web server is successfully installed and
+working. Further configuration is required.</p>
+
+<p>For online documentation and support please refer to
+<a href="http://nginx.org/">nginx.org</a>.<br/>
+Commercial support is available at
+<a href="http://nginx.com/">nginx.com</a>.</p>
+
+<p><em>Thank you for using nginx.</em></p>
+</body>
+</html>
+```
 
 
 
