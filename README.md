@@ -4,7 +4,7 @@ Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 
 ## Requirements
 
-- [Multipass](https://multipass.run/docs/installing-on-windows)
+- [Multipass](https://multipass.run/docs/installing-on-windows) (Hyper-V)
 
 ## Technologies
 
@@ -14,9 +14,9 @@ Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 - [Kubernetes](https://kubernetes.io/docs/home/)
 - [Ansible](https://docs.ansible.com/ansible/latest/index.html)
 
-## Multipass Setup
+## AWX Multipass VM Setup
 
-Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-init-with-multipass) yaml files to customize hosts on launch. In the `awx/multipass` directory there is a `awx-cloud-config.yml` file that does the following when provisioning the vm. 
+Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-init-with-multipass) yaml files to customize hosts on launch. We will use one of these files when launching our vm for awx. `multipass/cloud-init/awx-cloud-config.yml` does the following: 
 
 1. installs required packages
 2. installs docker 20.10.12 as outlined in the [Offical Docker installation documention](https://docs.docker.com/engine/install/ubuntu/)
@@ -25,12 +25,33 @@ Multipass takes advantage of [cloud-init](https://ubuntu.com/blog/using-cloud-in
 5. sets the cgroup driver to systemd for docker, by default it is cgroupfs
 
 ```
-multipass launch --cloud-init awx/multipass/awx-cloud-config.yml --disk 15G --mem 4G --cpus 4 --name awx
+multipass launch --cloud-init multipass/cloud-init/awx-cloud-config.yml --disk 15G --mem 5G --cpus 4 --name awx
 ```
 
 This will create a multipass vm named `awx`
 
-## Minikube Setup
+## Disable Dynamic Memory Allocation
+
+>Note: If you have a lot of memory (32G+) on your system you can probably skip this step. Otherwise you may run into out of memory errors for awx
+
+When running on Hyper-V, Multipass will dynamically allocate more memory even if we specify --mem 3G. In order to disable the dynamic memory allocation we will need to
+
+1. Stop the vm 
+```
+multipass stop awx
+```
+2. Disable dynamic memory allocation in Hyper-V
+
+![image](https://user-images.githubusercontent.com/16169323/163237066-633345ec-5939-4763-bc6f-0434ed67510d.png)
+
+3. Restart the vm
+```
+multipass start awx
+```
+
+## AWX Minikube Setup
+
+The recommended way of running awx is on a minikube (or any k8s) instance. We will be installing and starting minikube on our awx vm.
 
 Login to the newly created `awx` vm
 
@@ -41,7 +62,7 @@ multipass shell awx
 Start minikube
 
 ```
-minikube start --memory=3g --cpus=4
+minikube start --memory=4g --cpus=4
 ```
 >Note: Using lower mem/cpu requirements may cause issues when starting awx pods
 
@@ -51,7 +72,9 @@ Set alias for minikube kubectl command to kubectl
 alias kubectl="minikube kubectl --"
 ```
 
-References: https://minikube.sigs.k8s.io/docs/start/
+References: 
+- https://minikube.sigs.k8s.io/docs/start/
+- https://github.com/ansible/awx/blob/devel/INSTALL.md
 
 ## AWX Setup 
 
@@ -120,9 +143,9 @@ Expose Kubernetes port for external accesss
 ```
 kubectl port-forward --address 0.0.0.0 service/awx-service 8080:80 -n awx &> /dev/null &
 ```
-You can now access the AWX webpage by going to `<multipass-awx-vm-ip-address>:8080` or `http://awx.mshome.net:8080/`
+You can now access the AWX webpage by going to [http://awx.mshome.net:8080/](http://awx.mshome.net:8080/) or `<awx-vm-ip-address>:8080`
 
->Note: you can find your ip address with `multipass list`
+>Note: you can find your ip address with `multipass list` or `ip a` in your vms shell
 
 By default, the admin user is `admin` and the password is available in the `<resourcename>-admin-password` secret. To retrieve the admin password, run:
 
