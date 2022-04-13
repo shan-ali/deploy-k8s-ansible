@@ -92,7 +92,12 @@
     wait_for:
       timeout: 30
     delegate_to: localhost
+
+
+- hosts: controller
+  gather_facts: yes  
+  tasks:
   
-  - name: view nodes (STATUS should be Ready)
+  - name: view nodes (There should be 2 nodes)
     shell: kubectl get nodes
 
