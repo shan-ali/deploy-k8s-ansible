@@ -2,6 +2,24 @@
 
 Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 
+## Table of Contents
+- [Requirements](#requirements)
+- [Technologies](#technologies)
+- [AWX Multipass VM Setup](#awx-multipass-vm-setup)
+- [Disable Dynamic Memory Allocation](#disable-dynamic-memory-allocation)
+- [AWX Minikube Setup](#awx-minikube-setup)
+- [AWX Setup](#awx-setup)
+- [Configure Your Local Windows Host as a Node - Optional](#configure-your-local-windows-host-as-a-node---optional)
+- [Provision VMs via Playbook - Optional](#provision-vms-via-playbook---optional)
+- [Provision Kubernetes VMs](#provision-kubernetes-vms)
+- [Add New VMs to AWX](#add-new-vms-to-awx)
+- [Setup SSH Keys](#setup-ssh-keys)
+- [Install Packages](#install-packages)
+- [Initialize the Kubernetes Cluster](#initialize-the-kubernetes-cluster)
+- [Verify Cluster](#verify-cluster)
+- [Smoke Test](#smoke-test)
+- [Clean Up](#clean-up)
+
 ## Requirements
 
 - [Multipass](https://multipass.run/docs/installing-on-windows) (Hyper-V)
@@ -157,7 +175,7 @@ Reference:
 - https://github.com/ansible/awx/blob/devel/INSTALL.md
 - https://github.com/ansible/awx-operator 
 
-## Configure Your Local Windows Host as a Node (Optional)
+## Configure Your Local Windows Host as a Node - Optional
 
 Now that we have AWX up and running, we can start configuring it and adding nodes to it. The next main step will be to setup and run a playbook to deploy a K8s cluster on two Multipass VMs. 
 
@@ -165,7 +183,7 @@ If you would like to automate the provisoning of these VMs, you will need to add
 
 The steps to add your Windows machine as a node can be found here: [configure-windows-node.md](docs/configure-windows-node.md). 
 
-## Provision VMs via Playbook (Optional)
+## Provision VMs via Playbook - Optional
 
 If you have done the above step of configuring your Windows host as an Ansible node you can now provision your K8s Multipass VMs following the the steps in [provision-multipass-vms.md](docs/provision-multipass-vms.md). Otherwise skip to the [Provision VMs](#provision-vms) section. 
 
