@@ -401,12 +401,20 @@ Commercial support is available at
 </html>
 ```
 
-### Clean Up
+### Clean Up Tests
 
 ```
 kubectl delete deployment nginx --force
 ```
 
+## Clean Up
+
+If you would like to cleanup the entire environment we can simply run 
+
+```
+multipass delete --all
+multipass purge
+```
 
 
 
