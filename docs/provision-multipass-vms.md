@@ -28,6 +28,6 @@ The `provision-vms.yml` playbook will essentially create two Multipass VMs. It w
 1. controller - 172.22.5.11/20
 2. worker - 172.22.5.21/20
 
-![image](https://user-images.githubusercontent.com/16169323/162809617-eeb5b3aa-91f6-400e-9746-b232e741a415.png)
+![image](https://user-images.githubusercontent.com/16169323/163254391-0267921c-52c7-4bd8-a94e-bdd068c54796.png)
 
 
