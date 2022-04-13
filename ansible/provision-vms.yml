@@ -1,5 +1,5 @@
 ---
-- name: multipass-provision-vms
+- name: provision-vms
   hosts: all 
 
   tasks: 
