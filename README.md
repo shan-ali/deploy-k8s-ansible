@@ -1,4 +1,4 @@
-# install-awx-ansible-k8s
+# deploy-k8s-ansible
 
 Deploy a K8s cluster on Multipass VMS using Ansible and AWX (Ansible Tower)
 
